@@ -3,6 +3,9 @@ import { Button, TextField, Container, Typography, Card, CardContent } from '@mu
 import SnackbarMessage from '../components/SnackMsg';
 import { useRegister } from '../hooks/useRegister';
 import { registerStyles } from './styles/registerStyles';
+import { useNavigate } from 'react-router-dom';
+import useLogin from '../hooks/useLogin';
+import useAuth from '../hooks/useAuth';
 
 export default function Register() {
     const { registerUser, loading, error } = useRegister();
@@ -17,6 +20,9 @@ export default function Register() {
         message: '',
         type: 'info' as 'error' | 'success' | 'info',
     });
+    const navigate = useNavigate();
+    const { login } = useLogin(); // Use the correct function from useLogin
+    const { login: loginContext } = useAuth(); // Use the login function from AuthContext
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -29,11 +35,21 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const success = await registerUser(form);
-        setSnackbar({
-            open: true,
-            message: success ? 'Registered successfully!' : error || 'Registration failed!',
-            type: success ? 'success' : 'error',
-        });
+
+        if (success) {
+            // Automatically log in the user after registration
+            const loginResponse = await login({ email: form.email, password: form.password }); // Use login here
+            if (loginResponse) {
+                loginContext(loginResponse.user, loginResponse.token); // Set user and token in AuthContext
+                navigate('/preferences'); // Navigate to preferences
+            }
+        } else {
+            setSnackbar({
+                open: true,
+                message: error || 'Registration failed!',
+                type: 'error',
+            });
+        }
     };
 
     const handleSnackbarClose = () => {
@@ -73,7 +89,6 @@ export default function Register() {
                             variant="outlined"
                             sx={registerStyles.registerTextField}
                         />
-
                         <TextField
                             fullWidth
                             label="Password"
