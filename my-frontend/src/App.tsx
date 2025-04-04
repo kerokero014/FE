@@ -6,7 +6,6 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './Routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
 import Labs from './pages/Labs';
 
@@ -24,7 +23,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/preferences" element={<Preferences />} />
+                    {/* <Route path="/preferences" element={<Preferences />} /> */}
                     <Route path="/Labs" element={<Labs />} />
                     <Route
                         path="/dashboard"
