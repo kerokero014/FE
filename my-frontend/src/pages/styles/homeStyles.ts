@@ -31,4 +31,25 @@ export const homeStyles = {
         p: 3,
         boxShadow: 3,
     },
+    loggedinButton: {
+        backgroundColor: '#AF1F01',
+        color: 'white',
+        py: 2,
+        px: 4,
+        borderRadius: 2,
+        '&:hover': {
+            backgroundColor: '#3D0A00',
+        },
+    },
+    secondaryLoggedinButton: {
+        backgroundColor: '#576416',
+        color: 'white',
+        py: 2,
+        px: 4,
+        mt: 2,
+        borderRadius: 2,
+        '&:hover': {
+            backgroundColor: '#2C320B',
+        },
+    },
 };

@@ -37,7 +37,7 @@ const Home = () => {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            sx={{ px: 4, py: 1.2, fontSize: '1rem' }}
+                                            sx={homeStyles.loggedinButton}
                                             onClick={() => navigate('/dashboard')}
                                         >
                                             Go to Dashboard
@@ -50,7 +50,7 @@ const Home = () => {
                                         <Button
                                             variant="contained"
                                             color="secondary"
-                                            sx={{ px: 4, py: 1.2, fontSize: '1rem', mt: 2 }}
+                                            sx={homeStyles.secondaryLoggedinButton}
                                             onClick={() => navigate('/labs')}
                                         >
                                             Go to Labs
