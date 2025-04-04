@@ -7,6 +7,7 @@ import ProtectedRoute from './Routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
+import Preferences from './pages/Preferences';
 import Labs from './pages/Labs';
 
 const App = () => {
@@ -23,7 +24,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/profile" element={<Profile />} />
-                    {/* <Route path="/preferences" element={<Preferences />} /> */}
+                    <Route path="/preferences" element={<Preferences />} />
                     <Route path="/Labs" element={<Labs />} />
                     <Route
                         path="/dashboard"
