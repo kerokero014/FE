@@ -1,49 +1,100 @@
 import { useEffect, useState } from 'react';
-import { Container, Typography } from '@mui/material';
+import {
+    Container,
+    Typography,
+    Box,
+    List,
+    ListItem,
+    ListItemText,
+    Grid,
+    Paper,
+} from '@mui/material';
 import UserInfo from '../components/UserInfo';
 import WeightGraph from '../components/WeightGraph';
 import NutritionalBreakdown from '../components/NutritionalBreakdown';
-import PreferencesList from '../components/PreferenceList';
-import SavedRecipes from '../components/SavedRecipes';
-
-interface UserProfile {
-    name: string;
-    email: string;
-    preferences: string[];
-    weightHistory: { date: string; weight: number }[];
-    nutritionalBreakdown: { calories: number; protein: number; carbs: number; fats: number };
-}
-
-interface Recipe {
-    id: number;
-    title: string;
-    imageUrl: string;
-}
+import { getUserProfile, UserProfile } from '../services/userService';
+import useAuth from '../hooks/useAuth';
 
 const MyProfile = () => {
+    const { user: authUser } = useAuth();
     const [user, setUser] = useState<UserProfile | null>(null);
-    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    const userId = authUser?.id;
 
     useEffect(() => {
-        fetch('/api/user-profile')
-            .then((res) => res.json())
-            .then(setUser);
+        if (!userId) {
+            setError('User ID not found');
+            return;
+        }
 
-        fetch('/api/saved-recipes')
-            .then((res) => res.json())
-            .then(setRecipes);
-    }, []);
+        const fetchUserProfile = async () => {
+            try {
+                const userData = await getUserProfile(userId);
+                setUser(userData);
+            } catch (err) {
+                setError((err as Error).message);
+            }
+        };
 
+        fetchUserProfile();
+    }, [userId]);
+
+    if (error) return <Typography color="error">{error}</Typography>;
     if (!user) return <Typography>Loading...</Typography>;
 
+    const renderList = (title: string, items: { id: number; name: string }[]) => (
+        <Box my={2}>
+            <Typography variant="h6">{title}</Typography>
+            <List>
+                {items.map((item) => (
+                    <ListItem key={item.id}>
+                        <ListItemText primary={item.name} />
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
+
     return (
-        <Container>
-            <Typography variant="h4">My Profile</Typography>
-            <UserInfo name={user.name} email={user.email} />
-            <WeightGraph weightHistory={user.weightHistory} />
-            <NutritionalBreakdown data={user.nutritionalBreakdown} />
-            <PreferencesList preferences={user.preferences} />
-            <SavedRecipes recipes={recipes} />
+        <Container maxWidth="md" sx={{ py: 4 }}>
+            <Typography variant="h4" gutterBottom>
+                My Profile
+            </Typography>
+
+            <UserInfo name={user.firstName} email={user.email} />
+
+            <Grid>
+                <Grid>
+                    <WeightGraph weightHistory={[]} />
+                </Grid>
+            </Grid>
+
+            <Grid sx={{ mt: 4 }}>
+                <NutritionalBreakdown
+                    data={{ calories: 3000, protein: 190, carbs: 50, fats: 50 }}
+                />
+            </Grid>
+
+            <Grid container spacing={4} sx={{ mt: 2 }}>
+                <Grid>
+                    <Paper elevation={2} sx={{ p: 2, height: '100%', width: '200px' }}>
+                        {renderList('Favorite Foods', user.favoriteFoods ?? [])}
+                    </Paper>
+                </Grid>
+
+                <Grid>
+                    <Paper elevation={3} sx={{ p: 2, height: '100%', width: '200px' }}>
+                        {renderList('Allergies', user.allergies ?? [])}
+                    </Paper>
+                </Grid>
+
+                <Grid>
+                    <Paper elevation={2} sx={{ p: 2, height: '100%', width: '200px' }}>
+                        {renderList('Dislikes', user.dislikes ?? [])}
+                    </Paper>
+                </Grid>
+            </Grid>
         </Container>
     );
 };

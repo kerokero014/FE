@@ -27,7 +27,21 @@ export default function Navbar() {
                             <Button color="inherit" component={Link} to="/dashboard" sx={{ mx: 1 }}>
                                 Dashboard
                             </Button>
-                            <Button color="inherit" onClick={auth.logout} sx={{ mx: 1 }}>
+                            <Button
+                                color="inherit"
+                                component={Link}
+                                to="/labs"
+                                sx={navbarStyles.button}
+                            >
+                                Labs
+                            </Button>
+
+                            <Button
+                                color="inherit"
+                                variant="outlined"
+                                onClick={auth.logout}
+                                sx={{ mx: 1 }}
+                            >
                                 Logout
                             </Button>
                         </>

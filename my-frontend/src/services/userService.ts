@@ -1,9 +1,18 @@
 // services/userService.ts
+
+export interface NamedItem {
+    id: number;
+    name: string;
+}
+
 export interface UserProfile {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    allergies?: NamedItem[];
+    dislikes?: NamedItem[];
+    favoriteFoods?: NamedItem[];
 }
 
 export const getUserProfile = async (userId: string): Promise<UserProfile> => {

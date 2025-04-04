@@ -14,7 +14,6 @@ export const navbarStyles = {
     },
     button: {
         mx: 1,
-        fontWeight: 'bold',
     },
     registerButton: {
         mx: 1,

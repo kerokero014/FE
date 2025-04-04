@@ -15,18 +15,18 @@ const useUserProfile = (userId?: string) => {
       return;
     }
 
-    const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const profile = await getUserProfile(id);
-        setUserData(profile);
-      } catch (err) {
-        setError("Failed to fetch user data.");
-        console.error("Error fetching user:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+        const fetchUser = async () => {
+            try {
+                setLoading(true);
+                const profile = await getUserProfile(id);
+                setUserData(profile);
+            } catch (err) {
+                setError('Failed to fetch user data.');
+                console.error('Error fetching user:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
     fetchUser();
   }, [userId]);
