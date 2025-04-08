@@ -1,17 +1,24 @@
-//Page where the user can create recipes obtained from ChatGPT API, prompt in a search bar cravings,
-// ChatGPT will know in the same propmt their allergies, dislikes and favorite foods, and will return a recipe.
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Grid, Box } from '@mui/material';
 import { labsStyles } from './styles/LabsStyles';
 import RecipeForm from '../components/recipeForm';
+import GenerateRecipe from '../components/GenerateRecipe';
 
 const Labs = () => {
     return (
-        <Container maxWidth="lg" sx={labsStyles.container}>
-            <Typography sx={labsStyles.title} variant="h1" component="h2">
-                <h1>Labs</h1>
+        <Container sx={labsStyles.container}>
+            <Typography sx={labsStyles.title} variant="h1">
+                Labs
             </Typography>
-
-            <RecipeForm />
+            <Grid container spacing={4} justifyContent="center">
+                <Grid>
+                    <Box sx={labsStyles.formContainer}>
+                        <RecipeForm />
+                    </Box>
+                    <Box sx={labsStyles.recipeContainer}>
+                        <GenerateRecipe />
+                    </Box>
+                </Grid>
+            </Grid>
         </Container>
     );
 };

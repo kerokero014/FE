@@ -37,3 +37,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+// TODO: Improve the UI and add more features to the dashboard.
