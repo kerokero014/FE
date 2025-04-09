@@ -26,7 +26,7 @@ const useGenerateRecipe = (): UseGenerateRecipe => {
         setError(null);
 
         try {
-            const res = await fetch('http://localhost:5000/labs-recipe/generate', {
+            const res = await fetch('https://be-m76b.onrender.com/labs-recipe/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export const useCreateRecipe = () => {
         setError('');
 
         try {
-            const res = await fetch('http://localhost:5000/recipes', {
+            const res = await fetch('https://be-m76b.onrender.com/recipes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

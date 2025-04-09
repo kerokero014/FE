@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://be-m76b.onrender.com';
 
 export const saveRecipe = async (recipeId: number, userId: number) => {
     try {

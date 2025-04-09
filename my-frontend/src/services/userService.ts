@@ -21,7 +21,7 @@ export const getUserProfile = async (userId: string): Promise<UserProfile> => {
         throw new Error('User not authenticated');
     }
 
-    const response = await fetch(`http://localhost:5000/users/${userId}`, {
+    const response = await fetch(`https://be-m76b.onrender.com/users/${userId}`, {
         headers: {
             Authorization: `Bearer ${token}`, // Ensure to send the token in the headers
         },

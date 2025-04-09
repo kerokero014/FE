@@ -26,9 +26,9 @@ const useUserPreferences = (userId: string | null) => {
                 }
 
                 const endpoints = [
-                    `http://localhost:5000/allergies/${userId}`,
-                    `http://localhost:5000/dislikes/${userId}`,
-                    `http://localhost:5000/favorites/${userId}`,
+                    `https://be-m76b.onrender.com/allergies/${userId}`,
+                    `https://be-m76b.onrender.com/dislikes/${userId}`,
+                    `https://be-m76b.onrender.com/favorites/${userId}`,
                 ];
 
                 const responses = await Promise.all(

@@ -6,7 +6,7 @@ export const usePreferences = () => {
 
     const savePreferences = async (preferences: Preferences & { userId: string }) => {
         try {
-            const response = await fetch('http://localhost:5000/preferences', {
+            const response = await fetch('https://be-m76b.onrender.com/preferences', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
