@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, CircularProgress } from '@mui/material';
+import { TextField, Button, Box, CircularProgress, Typography, Divider } from '@mui/material';
 import useGenerateRecipe from '../hooks/useGenerate';
 import SnackbarMessage from './SnackMsg';
-import useAuth from '../hooks/useAuth'; // Adjust the import path as necessary
 import { GenStyles } from './generteStyles';
+import useAuth from '../hooks/useAuth';
+import { saveRecipe } from '../services/recipeService';
 
-const GenerateRecipe = () => {
+const GenerateRecipe: React.FC = () => {
+    const { user } = useAuth(); // Move useAuth to the top level
     const [craving, setCraving] = useState('');
     const { generateRecipe, loading, error, recipe } = useGenerateRecipe();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const { user } = useAuth(); // Access the authenticated user
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (user && user.id) {
-            await generateRecipe(craving, user.id); // Use the dynamic userId
-            setSnackbarOpen(true);
-        } else {
-            // Handle the case where user or user.id is not available
-            console.error('User is not authenticated');
-        }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await generateRecipe(craving);
+        setSnackbarOpen(true);
     };
 
-    const handleCloseSnackbar = () => {
-        setSnackbarOpen(false);
+    const handleSaveRecipe = async (recipeId: number) => {
+        if (!user?.id) {
+            console.error('User not logged in');
+            return;
+        }
+
+        try {
+            await saveRecipe(recipeId, Number(user.id));
+            console.log('Recipe saved successfully');
+        } catch (error) {
+            console.error('Failed to save recipe:', error);
+        }
     };
 
     return (
         <Box component="form" onSubmit={handleSubmit} sx={GenStyles.Box}>
             <TextField
                 label="What are you craving?"
-                variant="outlined"
                 fullWidth
                 value={craving}
                 onChange={(e) => setCraving(e.target.value)}
                 required
                 sx={GenStyles.TextField}
             />
+
             <Button
                 type="submit"
                 variant="contained"
-                color="primary"
-                sx={GenStyles.submitButton}
                 disabled={loading}
+                sx={GenStyles.submitButton}
             >
                 Generate Recipe
             </Button>
@@ -51,26 +56,50 @@ const GenerateRecipe = () => {
 
             <SnackbarMessage
                 open={snackbarOpen}
-                message={error ? error : 'Recipe generated successfully!'}
+                message={error ?? 'Recipe generated successfully!'}
                 type={error ? 'error' : 'success'}
-                onClose={handleCloseSnackbar}
+                onClose={() => setSnackbarOpen(false)}
             />
 
             {recipe && (
                 <Box sx={GenStyles.recipeBox}>
-                    <h2>{recipe.title}</h2>
-                    <p>{recipe.description}</p>
-                    <p>
+                    <Typography variant="h5" component="h2" gutterBottom>
+                        {recipe.title}
+                    </Typography>
+                    <Typography variant="body1" paragraph>
+                        {recipe.description}
+                    </Typography>
+                    <Typography variant="subtitle1" gutterBottom>
                         <strong>Nutritional Value:</strong> {recipe.nutritionalValue}
-                    </p>
-                    <h3>Instructions:</h3>
-                    <p>{recipe.instructions}</p>
-                    <h3>Steps:</h3>
-                    <ol>
-                        {recipe.steps.map((step, index) => (
-                            <li key={index}>{step.step}</li>
-                        ))}
+                    </Typography>
+                    <Divider sx={{ my: 2 }} />
+                    <Typography variant="h6" gutterBottom>
+                        Instructions
+                    </Typography>
+                    <Typography variant="body2" paragraph>
+                        {recipe.instructions}
+                    </Typography>
+                    <Typography variant="h6" gutterBottom>
+                        Steps
+                    </Typography>
+                    <ol style={{ paddingLeft: '1.5rem' }}>
+                        {recipe.steps
+                            .sort((a, b) => a.order - b.order)
+                            .map((step) => (
+                                <li key={step.order}>
+                                    <Typography variant="body2" paragraph>
+                                        {step.step}
+                                    </Typography>
+                                </li>
+                            ))}
                     </ol>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleSaveRecipe(Number(recipe.id))} // Ensure recipe.id is a number
+                    >
+                        Save Recipe
+                    </Button>
                 </Box>
             )}
         </Box>

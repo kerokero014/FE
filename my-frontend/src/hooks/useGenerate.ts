@@ -1,30 +1,48 @@
-// hooks/useGenerateRecipe.js
+// hooks/useGenerateRecipe.ts
 import { useState } from 'react';
-import { Recipe } from '../types/recipe.types'; // Adjust the import path as necessary
+import { Recipe } from '../types/recipe.types';
+import useAuth from './useAuth';
 
-const useGenerateRecipe = () => {
+type UseGenerateRecipe = {
+    generateRecipe: (craving: string) => Promise<void>;
+    loading: boolean;
+    error: string | null;
+    recipe: Recipe | null;
+};
+
+const useGenerateRecipe = (): UseGenerateRecipe => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [recipe, setRecipe] = useState<Recipe | null>(null);
+    const { user, token } = useAuth();
 
-    const generateRecipe = async (craving: string, userId: string) => {
+    const generateRecipe = async (craving: string) => {
+        if (!user?.id || !token) {
+            setError('You must be logged in to generate a recipe.');
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:3000/labs-recipe/generate', {
+            const res = await fetch('http://localhost:5000/labs-recipe/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ craving, userId }),
+                body: JSON.stringify({
+                    craving,
+                    userId: user.id, // now guaranteed to be a number
+                }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch recipe');
+            if (!res.ok) {
+                throw new Error(`Error ${res.status}: ${res.statusText}`);
             }
 
-            const data: Recipe = await response.json(); // Ensure it matches the `Recipe` interface
+            const data: Recipe = await res.json();
             setRecipe(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
