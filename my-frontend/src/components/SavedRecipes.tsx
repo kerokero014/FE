@@ -100,16 +100,6 @@ const SavedRecipes = () => {
                         </Typography>
                         <Typography>{selectedRecipe?.nutritionalValue}</Typography>
                     </Box>
-
-                    <Box sx={savedStyles.section}>
-                        <Typography variant="subtitle1" gutterBottom>
-                            Instructions:
-                        </Typography>
-                        <Typography>
-                            {selectedRecipe?.instructions || 'No instructions provided.'}
-                        </Typography>
-                    </Box>
-
                     <Box>
                         <Typography variant="subtitle1" gutterBottom>
                             Steps:
